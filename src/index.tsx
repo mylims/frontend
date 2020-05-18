@@ -1,9 +1,10 @@
 import React from "react";
 import { render } from "react-dom";
-import "./index.css";
 import { Router } from "@reach/router";
-import App from "./App";
+
+import App from "./views/App";
 import * as serviceWorker from "./serviceWorker";
+import "./scss/index.scss";
 
 render(
   <React.StrictMode>
