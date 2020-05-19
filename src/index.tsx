@@ -10,7 +10,7 @@ import * as serviceWorker from "./serviceWorker";
 import "./scss/index.scss";
 
 const routes = [
-  { path: "/home", name: "Home", Component: Home },
+  { path: "/", name: "Home", Component: Home },
   { path: "/app", name: "Test", Component: App },
 ];
 const menuRoutes = routes.map(({ path, name }) => ({ path, name }));
@@ -18,7 +18,6 @@ const menuRoutes = routes.map(({ path, name }) => ({ path, name }));
 render(
   <React.StrictMode>
     <Router>
-      <Redirect from="/" to="home" />
       {routes.map(({ Component, path }) => (
         <Layout key={path} path={path} routes={menuRoutes}>
           <Component path="/" />
