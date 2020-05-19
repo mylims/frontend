@@ -13,26 +13,22 @@ const LayoutComponent = ({
   children,
   routes,
   path,
-}: LayoutProps & RouteComponentProps) => {
-  console.log(path);
-
-  return (
-    <Layout className="layout">
-      <Header className="header">
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal" selectedKeys={[path || ""]}>
-          {routes.map(({ name, path: key }) => (
-            <Menu.Item key={key}>
-              <Link to={key}>{name}</Link>
-            </Menu.Item>
-          ))}
-        </Menu>
-      </Header>
-      <Layout className="main">
-        <Content className="content">{children}</Content>
-      </Layout>
+}: LayoutProps & RouteComponentProps) => (
+  <Layout className="layout">
+    <Header className="header">
+      <div className="logo" />
+      <Menu theme="dark" mode="horizontal" selectedKeys={[path || ""]}>
+        {routes.map(({ name, path: key }) => (
+          <Menu.Item key={key}>
+            <Link to={key}>{name}</Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+    </Header>
+    <Layout className="main">
+      <Content className="content">{children}</Content>
     </Layout>
-  );
-};
+  </Layout>
+);
 
 export default LayoutComponent;
