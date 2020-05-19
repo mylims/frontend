@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import { Router, Redirect } from "@reach/router";
+import { Router } from "@reach/router";
 
 import App from "./views/App";
 import Home from "./views/Home";
