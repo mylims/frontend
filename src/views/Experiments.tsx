@@ -2,6 +2,7 @@ import React from "react";
 import { Table, Tag } from "antd";
 import { ColumnProps } from "antd/es/table";
 
+import { TableSearch, filterIcon, onFilter } from "../components/TableSearch";
 
 interface Experiment {
   codeId: string;
@@ -43,6 +44,9 @@ const columns: ColumnProps<Experiment>[] = [
     dataIndex: "codeId",
     sorter: stringSorter("codeId"),
     sortDirections: ["descend", "ascend"],
+    filterDropdown: (props) => <TableSearch {...props} dataIndex="codeId" />,
+    filterIcon,
+    onFilter: (value, record) => onFilter<Experiment>(value, record, "codeId"),
   },
   {
     key: "owners",
