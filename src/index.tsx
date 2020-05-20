@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "react-dom";
 import { Router } from "@reach/router";
 
-import App from "./views/App";
+import Experiments from "./views/Experiments";
 import Home from "./views/Home";
 import Layout from "./components/Layout";
 
@@ -11,7 +11,7 @@ import "./scss/index.scss";
 
 const routes = [
   { path: "/", name: "Home", Component: Home },
-  { path: "/app", name: "Test", Component: App },
+  { path: "/experiments", name: "Experiments", Component: Experiments },
 ];
 const menuRoutes = routes.map(({ path, name }) => ({ path, name }));
 
