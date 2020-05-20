@@ -32,11 +32,6 @@ function stringSorter(key: "codeId" | "title") {
   return (a: Experiment, b: Experiment) => a[key].localeCompare(b[key]);
 }
 
-function stringFilter(key: "codeId" | "title") {
-  return (value: string | number | boolean, record: Experiment) =>
-    typeof value === "string" ? record[key].indexOf(value) === 0 : false;
-}
-
 const columns: ColumnProps<Experiment>[] = [
   {
     key: "codeId",
@@ -66,14 +61,20 @@ const columns: ColumnProps<Experiment>[] = [
     dataIndex: "title",
     sorter: stringSorter("title"),
     sortDirections: ["descend", "ascend"],
-    onFilter: stringFilter("title"),
-    filters: [{ text: "test", value: "test" }],
-    filterMultiple: false,
+    filterDropdown: (props) => <TableSearch {...props} dataIndex="title" />,
+    filterIcon,
+    onFilter: (value, record) => onFilter<Experiment>(value, record, "title"),
   },
   {
     key: "description",
     title: "Description",
     dataIndex: "description",
+    filterDropdown: (props) => (
+      <TableSearch {...props} dataIndex="description" />
+    ),
+    filterIcon,
+    onFilter: (value, record) =>
+      onFilter<Experiment>(value, record, "description"),
   },
   {
     key: "creationDate",

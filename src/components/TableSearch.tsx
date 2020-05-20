@@ -61,11 +61,12 @@ export const filterIcon = (filtered: boolean) => (
 );
 
 export function onFilter<T>(
-  value: string | number | boolean,
+  value: string | number | boolean | undefined,
   record: T,
   dataIndex: keyof T
 ) {
   const initial: any = record[dataIndex];
+  if (!value || !initial) return false;
   return initial
     .toString()
     .toLowerCase()
