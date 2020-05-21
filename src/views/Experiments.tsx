@@ -1,8 +1,28 @@
 import React from "react";
 import { Table, Tag } from "antd";
 import { ColumnProps } from "antd/es/table";
+import { useQuery } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
 
 import { TableSearch, filterIcon, onFilter } from "../components/TableSearch";
+import Error from "../components/Error";
+
+const EXPERIMENTS = gql`
+  {
+    experimentByOwner(owner: "me") {
+      codeId
+      owners
+      tags
+      title
+      description
+      creationDate
+      lastModificationDate
+      status {
+        kind
+      }
+    }
+  }
+`;
 
 interface Experiment {
   codeId: string;
@@ -12,7 +32,7 @@ interface Experiment {
   description?: string;
   creationDate: string;
   lastModificationDate?: string;
-  status?: string;
+  status?: { kind: string };
 }
 
 function renderTags(tags: string[]) {
@@ -92,34 +112,22 @@ const columns: ColumnProps<Experiment>[] = [
     key: "status",
     title: "Status",
     dataIndex: "status",
+    render: ({ kind }) => kind,
   },
 ];
 
-const data: Experiment[] = [
-  {
-    codeId: "A30",
-    owners: ["me"],
-    tags: ["hi"],
-    title: "first test",
-    creationDate: new Date(2019).toString(),
-    lastModificationDate: new Date().toString(),
-    status: "active",
-  },
-  {
-    codeId: "A32",
-    owners: ["me", "you"],
-    tags: ["test", "testing"],
-    title: "second test",
-    description: "we are testing",
-    creationDate: new Date(2019).toString(),
-    lastModificationDate: new Date().toString(),
-  },
-];
+const Experiments = (props: any) => {
+  const { loading, error, data } = useQuery(EXPERIMENTS);
 
-const Experiments = (props: any) => (
-  <div className="experiments">
-    <Table<Experiment> columns={columns} dataSource={data} />
-    <div className="detail"></div>
-  </div>
-);
+  if (error) return <Error message={error.message} />;
+
+  return (
+    <Table<Experiment>
+      columns={columns}
+      dataSource={data}
+      loading={loading}
+      className="experiments"
+    />
+  );
+};
 export default Experiments;
