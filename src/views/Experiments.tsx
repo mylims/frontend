@@ -36,6 +36,7 @@ interface Experiment {
 }
 
 function renderTags(tags: string[]) {
+  if (!tags) return null;
   return tags.map((tag) => (
     <Tag color="geekblue" key={tag}>
       {tag.toUpperCase()}
@@ -45,7 +46,9 @@ function renderTags(tags: string[]) {
 
 function renderDate(initialDate: string) {
   const date = new Date(initialDate);
-  return `${date.getDate()}/${1 + date.getMonth()}/${date.getFullYear()}`;
+  return initialDate
+    ? `${date.getDate()}/${1 + date.getMonth()}/${date.getFullYear()}`
+    : "";
 }
 
 function stringSorter(key: "codeId" | "title") {
@@ -112,7 +115,7 @@ const columns: ColumnProps<Experiment>[] = [
     key: "status",
     title: "Status",
     dataIndex: "status",
-    render: ({ kind }) => kind,
+    render: (value) => (value ? value[0].kind : null),
   },
 ];
 
@@ -120,11 +123,13 @@ const Experiments = (props: any) => {
   const { loading, error, data } = useQuery(EXPERIMENTS);
 
   if (error) return <Error message={error.message} />;
+  const dataSource = data ? data.experimentByOwner : [];
+  console.log(dataSource);
 
   return (
     <Table<Experiment>
       columns={columns}
-      dataSource={data}
+      dataSource={dataSource}
       loading={loading}
       className="experiments"
     />
