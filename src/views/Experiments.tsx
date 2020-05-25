@@ -7,7 +7,7 @@ import { gql } from "apollo-boost";
 import { TableSearch, filterIcon, onFilter } from "../components/TableSearch";
 import Error from "../components/Error";
 
-const EXPERIMENTS = gql`
+export const EXPERIMENTS = gql`
   {
     experimentByOwner(owner: "me") {
       codeId
@@ -33,6 +33,10 @@ interface Experiment {
   creationDate: string;
   lastModificationDate?: string;
   status?: { kind: string };
+}
+
+interface ExperimentsData {
+  experimentByOwner: Experiment[];
 }
 
 function renderTags(tags: string[]) {
@@ -120,11 +124,10 @@ const columns: ColumnProps<Experiment>[] = [
 ];
 
 const Experiments = (props: any) => {
-  const { loading, error, data } = useQuery(EXPERIMENTS);
+  const { loading, error, data } = useQuery<ExperimentsData>(EXPERIMENTS);
 
   if (error) return <Error message={error.message} />;
   const dataSource = data ? data.experimentByOwner : [];
-  console.log(dataSource);
 
   return (
     <Table<Experiment>
