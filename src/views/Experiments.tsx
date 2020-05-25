@@ -5,7 +5,10 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
 import { TableSearch, filterIcon, onFilter } from "../components/TableSearch";
+import Tag from "../components/Tag";
 import Error from "../components/Error";
+
+import { hashColor } from "../utils";
 
 export const EXPERIMENTS = gql`
   {
@@ -42,7 +45,7 @@ interface ExperimentsData {
 function renderTags(tags: string[]) {
   if (!tags) return null;
   return tags.map((tag) => (
-    <Tag color="geekblue" key={tag}>
+    <Tag color={hashColor(tag)} key={tag}>
       {tag.toUpperCase()}
     </Tag>
   ));
@@ -130,12 +133,11 @@ const Experiments = (props: any) => {
   const dataSource = data ? data.experimentByOwner : [];
 
   return (
-    <Table<Experiment>
-      columns={columns}
-      dataSource={dataSource}
-      loading={loading}
-      className="experiments"
-    />
+      <Table<Experiment>
+        columns={columns}
+        dataSource={dataSource}
+        loading={loading}
+      />
   );
 };
 export default Experiments;
