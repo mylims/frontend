@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { Table, Button, Modal } from "antd";
+import { Table, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { ColumnProps } from "antd/es/table";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
-import { TableSearch, filterIcon, onFilter } from "../components/TableSearch";
-import Tag from "../components/Tag";
-import Error from "../components/Error";
+import ExperimentForm from "./ExperimentForm";
 
-import { hashColor } from "../utils";
+import {
+  TableSearch,
+  filterIcon,
+  onFilter,
+} from "../../components/TableSearch";
+import Tag from "../../components/Tag";
+import Error from "../../components/Error";
+
+import { hashColor } from "../../utils";
 
 export const EXPERIMENTS = gql`
   {
@@ -129,26 +135,17 @@ const columns: ColumnProps<Experiment>[] = [
 
 const Experiments = (props: any) => {
   const { loading, error, data } = useQuery<ExperimentsData>(EXPERIMENTS);
-  const [modal, setModal] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   if (error) return <Error message={error.message} />;
   const dataSource = data ? data.experimentByOwner : [];
 
   return (
     <div className="experiments">
-      <Modal
-        title="Basic Modal"
-        visible={modal}
-        onOk={() => setModal(false)}
-        onCancel={() => setModal(false)}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
+      <ExperimentForm visible={visible} setVisible={setVisible} />
       <div className="experiments__header">
         <h2>Experiments</h2>
-        <Button onClick={() => setModal(true)}>
+        <Button onClick={() => setVisible(true)}>
           <PlusOutlined />
           Add new experiment
         </Button>
