@@ -142,7 +142,10 @@ const Experiments = (props: any) => {
 
   return (
     <div className="experiments">
-      <ExperimentForm visible={visible} setVisible={setVisible} />
+      <ExperimentForm
+        visible={visible}
+        closeModal={() => setVisible(false)}
+      />
       <div className="experiments__header">
         <h2>Experiments</h2>
         <Button onClick={() => setVisible(true)}>

@@ -1,63 +1,50 @@
-import React, { useReducer, useState } from "react";
-import { Modal, Input } from "antd";
+import React from "react";
+import { Form, Input, Radio } from "antd";
+import { Store } from "antd/lib/form/interface";
 
-interface ExperimentInput {
-  owners?: string[];
-  tags?: string[];
-  title: string;
-  description?: string;
-  status?: string;
-}
+import ModalForm from "../../components/ModalForm";
 
-interface Field {
-  title: string;
-  required: boolean;
-  key: keyof ExperimentInput;
-}
+const { Item } = Form;
 
 interface Props {
   visible: boolean;
-  setVisible: (visible: boolean) => void;
+  closeModal: () => void;
 }
 
-const ExperimentForm = ({ visible, setVisible }: Props) => {
-  const initialState: ExperimentInput = {
-    owners: [],
-    tags: [],
-    title: "",
-    description: undefined,
-    status: undefined,
+const ExperimentForm = ({ visible, closeModal }: Props) => {
+  const onCreate = (value: Store) => {
+    console.log(value);
+    closeModal();
   };
-  const [state, setState] = useState(initialState);
-
-  const handleOk = () => setVisible(false);
-  const handleCancel = () => setVisible(false);
-  const onChange = (key: keyof ExperimentInput, value: string) => {
-    setState((previous) => ({ ...previous, [key]: value }));
-  };
-
-  const fields: Field[] = [
-    { title: "Title", required: true, key: "title" },
-    { title: "Description", required: true, key: "description" },
-    { title: "Status", required: false, key: "status" },
-  ];
-
   return (
-    <Modal
-      title="Basic Modal"
+    <ModalForm
+      name="experiment"
       visible={visible}
-      onOk={handleOk}
-      onCancel={handleCancel}
+      onCreate={onCreate}
+      onCancel={closeModal}
     >
-      {fields.map(({ title, key }) => (
-        <Input
-          key={key}
-          placeholder={title}
-          value={state[key]}
-          onChange={(e) => onChange(key, e.currentTarget.value)}
-        />
-      ))}
-    </Modal>
+      <Item
+        name="title"
+        label="Title"
+        rules={[
+          {
+            required: true,
+            message: "Please input the title of collection!",
+          },
+        ]}
+      >
+        <Input />
+      </Item>
+      <Item name="description" label="Description">
+        <Input type="textarea" />
+      </Item>
+      <Item name="modifier" className="collection-create-form_last-form-item">
+        <Radio.Group>
+          <Radio value="public">Public</Radio>
+          <Radio value="private">Private</Radio>
+        </Radio.Group>
+      </Item>
+    </ModalForm>
   );
 };
 
