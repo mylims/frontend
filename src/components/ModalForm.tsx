@@ -7,10 +7,18 @@ interface Props {
   onCreate: (values: Store) => void;
   onCancel: () => void;
   name: string;
+  loading: boolean;
   children: React.ReactNode;
 }
 
-const ModalForm = ({ visible, onCreate, onCancel, name, children }: Props) => {
+const ModalForm = ({
+  visible,
+  onCreate,
+  onCancel,
+  name,
+  loading,
+  children,
+}: Props) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -19,6 +27,8 @@ const ModalForm = ({ visible, onCreate, onCancel, name, children }: Props) => {
       okText="Create"
       cancelText="Cancel"
       onCancel={onCancel}
+      okButtonProps={{ loading }}
+      cancelButtonProps={{ disabled: loading }}
       onOk={() => {
         form
           .validateFields()
