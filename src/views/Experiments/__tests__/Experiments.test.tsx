@@ -3,7 +3,7 @@ import { GraphQLError } from "graphql";
 import { render, screen, wait } from "@testing-library/react";
 import { MockedProvider } from "@apollo/react-testing";
 
-import Experiments, { EXPERIMENTS } from "../Experiments/Experiment";
+import Experiments, { EXPERIMENTS } from "../Experiment";
 
 it("Search for columns", () => {
   const mocks = [
