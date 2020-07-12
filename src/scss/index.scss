@@ -1,9 +1,9 @@
-@import "reset";
-@import "~antd/dist/antd.css";
+@import 'reset';
+@import 'tailwind/build.scss';
 
-@import "components/error";
-@import "components/layout";
-@import "components/modal_form";
-@import "components/tag";
+@import 'components/error';
+@import 'components/layout';
+@import 'components/modal_form';
+@import 'components/tag';
 
-@import "views/experiments";
+@import 'views/experiments';
