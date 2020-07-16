@@ -13,7 +13,7 @@ interface ModalFormProps {
 const ModalForm = ({ title, children, onSubmit, onCancel }: ModalFormProps) => {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+      className="fixed inset-x-0 bottom-0 z-20 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
       onClick={onCancel}
     >
       {/*
