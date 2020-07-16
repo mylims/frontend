@@ -1,16 +1,10 @@
-import React from "react";
-import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { Form, Input, Select } from "antd";
-import { Store } from "antd/lib/form/interface";
+import React from 'react';
+import { useMutation } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 
-import ModalForm from "../../components/ModalForm";
-
-const { Item } = Form;
-const { Option } = Select;
+import ModalForm from '../../components/ModalForm';
 
 interface Props {
-  visible: boolean;
   closeModal: (reload: boolean) => void;
 }
 
@@ -31,15 +25,15 @@ const CREATE_EXPERIMENT = gql`
   }
 `;
 
-const ExperimentForm = ({ visible, closeModal }: Props) => {
+const ExperimentForm = ({ closeModal }: Props) => {
   const [createExperiment, { loading, error }] = useMutation<ExperimentInput>(
-    CREATE_EXPERIMENT
+    CREATE_EXPERIMENT,
   );
 
-  const onCreate = (data: Store) => {
+  const onCreate = (data: Record<string, any>) => {
     const experiment = {
       ...data,
-      owners: ["me"],
+      owners: ['me'],
       status: [{ kind: data.status, date: new Date().toString() }],
     };
     createExperiment({ variables: { experiment } });
@@ -52,29 +46,13 @@ const ExperimentForm = ({ visible, closeModal }: Props) => {
 
   return (
     <ModalForm
-      name="experiment"
-      visible={visible}
-      onCreate={onCreate}
+      onSubmit={onCreate}
       onCancel={() => closeModal(false)}
-      loading={loading}
+      title="Experiment"
     >
-      <Item name="title" label="Title" rules={required("title")}>
-        <Input />
-      </Item>
-      <Item name="description" label="Description">
-        <Input type="textarea" />
-      </Item>
-      <Item name="tags" label="Tags">
-        <Select placeholder="Add a tag" mode="tags" defaultValue={[]} />
-      </Item>
-      <Item name="status" label="Status" rules={required("status")}>
-        <Select placeholder="Select a status" allowClear>
-          <Option value="active">active</Option>
-          <Option value="inactive">inactive</Option>
-        </Select>
-      </Item>
+      <p>test</p>
       {error && (
-        <div style={{ color: "#c51244" }}>
+        <div style={{ color: '#c51244' }}>
           An error has ocurred, please try again
         </div>
       )}

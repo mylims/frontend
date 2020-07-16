@@ -17,7 +17,10 @@ const Tag = ({ children, color }: Props) => {
     borderColor: darkColor,
   };
   return (
-    <span style={style} className="tag">
+    <span
+      style={style}
+      className="inline-flex px-2 text-xs font-semibold leading-5 rounded-full"
+    >
       {children}
     </span>
   );

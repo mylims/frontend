@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 
 import ExperimentForm from './ExperimentForm';
 
@@ -81,18 +79,27 @@ const Experiments = (_: any) => {
     if (reload) refetch();
     setVisible(false);
   };
-
   return (
-    <div className="experiments">
-      <ExperimentForm visible={visible} closeModal={closeModal} />
-      <div className="experiments__header">
-        <h2>Experiments</h2>
-        <Button onClick={() => setVisible(true)}>
-          <PlusOutlined />
-          Add new experiment
-        </Button>
-      </div>
-      <Table<Experiment> columns={columns} data={data?.experiments || []} />
+    <div>
+      {visible ? <ExperimentForm closeModal={closeModal} /> : null}
+      <header className="bg-white shadow">
+        <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold leading-tight text-gray-900">
+            Experiments
+          </h1>
+          <button
+            onClick={() => setVisible(true)}
+            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+          >
+            Add new experiment
+          </button>
+        </div>
+      </header>
+      <main>
+        <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <Table<Experiment> columns={columns} data={data?.experiments || []} />
+        </div>
+      </main>
     </div>
   );
 };
