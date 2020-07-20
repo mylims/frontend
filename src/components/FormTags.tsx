@@ -12,6 +12,7 @@ const FormTags = ({ label, name }: TagsProps) => {
   );
   const [text, setText] = useState('');
   const list: string[] = value || [];
+  const hasError = touched && error;
 
   const removeItem = (index: number) => {
     list.splice(index, 1);
@@ -38,14 +39,18 @@ const FormTags = ({ label, name }: TagsProps) => {
     }
   };
   return (
-    <div className="space-y-1">
+    <div className="min-w-full pb-3">
       <label
         id="listbox-label"
         className="block text-sm font-medium leading-5 text-gray-700"
       >
         {label}
       </label>
-      <div className="flex w-full pr-12 form-input pl-7 sm:text-sm sm:leading-5">
+      <div
+        className={`flex w-full pr-12 form-input pl-7 ${
+          hasError ? 'border-red-600' : ''
+        } sm:text-sm sm:leading-5`}
+      >
         {list.map((tag, index) => (
           <span
             key={tag}
@@ -81,7 +86,7 @@ const FormTags = ({ label, name }: TagsProps) => {
           onKeyDown={handleKeyDown}
         />
       </div>
-      {touched && error ? (
+      {hasError ? (
         <span className="block text-sm font-medium leading-5 text-red-700">
           {error}
         </span>

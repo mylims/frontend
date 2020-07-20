@@ -24,8 +24,9 @@ const FormSelect = ({ label, name, items }: SelectProps) => {
     name,
   );
   const [visible, setVisible] = useState(false);
+  const hasError = touched && error;
   return (
-    <div className="space-y-1">
+    <div className="min-w-full pb-3">
       <label
         id="listbox-label"
         className="block text-sm font-medium leading-5 text-gray-700"
@@ -39,7 +40,9 @@ const FormSelect = ({ label, name, items }: SelectProps) => {
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
-            className="relative w-full py-2 pl-3 pr-10 text-left transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md cursor-default focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5"
+            className={`relative w-full py-2 pl-3 pr-10 text-left ${
+              hasError ? 'border-red-600' : ''
+            } transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md cursor-default focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5`}
             onClick={() => {
               setTouched(true);
               setVisible(!visible);
@@ -109,8 +112,8 @@ const FormSelect = ({ label, name, items }: SelectProps) => {
           </ul>
         </div>
       </div>
-      {touched && error ? (
-        <span className="block text-sm font-medium leading-5 text-red-700">
+      {hasError ? (
+        <span className="block text-sm font-medium leading-5 text-red-600">
           {error}
         </span>
       ) : null}

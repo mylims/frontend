@@ -9,6 +9,7 @@ interface InputProps {
 
 const FormInput = ({ label, name, type }: InputProps) => {
   const [field, { touched, error }] = useField(name);
+  const hasError = touched && error;
   return (
     <div className="min-w-full pb-3">
       <label
@@ -19,13 +20,15 @@ const FormInput = ({ label, name, type }: InputProps) => {
       </label>
       <input
         {...field}
-        className="block w-full pr-12 form-input pl-7 sm:text-sm sm:leading-5"
+        className={`block w-full pr-12 form-input pl-7 sm:text-sm sm:leading-5 ${
+          hasError ? 'border-red-600' : ''
+        }`}
         name={name}
         aria-label={label}
         type={type || 'text'}
       />
-      {touched && error ? (
-        <span className="block text-sm font-medium leading-5 text-red-700">
+      {hasError ? (
+        <span className="block text-sm font-medium leading-5 text-red-600">
           {error}
         </span>
       ) : null}
