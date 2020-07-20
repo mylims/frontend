@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field, useField } from 'formik';
+import { useField } from 'formik';
 
 interface InputProps {
   label: string;
@@ -7,8 +7,8 @@ interface InputProps {
   type?: string;
 }
 
-export const FormInput = ({ label, name, type }: InputProps) => {
-  const { touched, error } = useField(name)[1];
+const FormInput = ({ label, name, type }: InputProps) => {
+  const [field, { touched, error }] = useField(name);
   return (
     <div className="min-w-full pb-3">
       <label
@@ -17,7 +17,8 @@ export const FormInput = ({ label, name, type }: InputProps) => {
       >
         {label}
       </label>
-      <Field
+      <input
+        {...field}
         className="block w-full pr-12 form-input pl-7 sm:text-sm sm:leading-5"
         name={name}
         aria-label={label}
@@ -31,3 +32,5 @@ export const FormInput = ({ label, name, type }: InputProps) => {
     </div>
   );
 };
+
+export default FormInput;

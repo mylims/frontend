@@ -2,18 +2,19 @@ import React from 'react';
 import * as Yup from 'yup';
 
 import ModalForm from '../../components/ModalForm';
-import { FormInput } from '../../components/FormInput';
+import FormInput from '../../components/FormInput';
 import { useCreateExperimentMutation } from '../../utils/generated';
+import FormSelect from '../../components/FormSelect';
+import FormTags from '../../components/FormTags';
 
 interface Props {
   closeModal: (reload: boolean) => void;
 }
 
 interface ExperimentInput {
-  owners: string[];
-  tags: string[];
   title: string;
   description?: string;
+  tags: string[];
   status: string;
 }
 
@@ -32,7 +33,7 @@ const ExperimentForm = ({ closeModal }: Props) => {
 
   return (
     <ModalForm
-      initialValues={{ firstName: '', lastName: '', email: '' }}
+      initialValues={{ title: '', tags: ['test'], status: '' }}
       validationSchema={Yup.object({
         firstName: Yup.string()
           .max(15, 'Must be 15 characters or less')
@@ -46,9 +47,10 @@ const ExperimentForm = ({ closeModal }: Props) => {
       onCancel={() => closeModal(false)}
       title="Create experiment"
     >
-      <FormInput label="First name" name="firstName" />
-      <FormInput label="Last name" name="lastName" />
-      <FormInput label="Email Address" name="email" type="email" />
+      <FormInput label="Title" name="title" />
+      <FormInput label="Description" name="description" />
+      <FormTags label="Tags" name="tags" />
+      <FormSelect label="Status" name="status" items={['active', 'inactive']} />
     </ModalForm>
   );
 };
