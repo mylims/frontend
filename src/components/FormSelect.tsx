@@ -83,15 +83,17 @@ const FormSelect = ({ label, name, items }: SelectProps) => {
             tabIndex={-1}
             role="listbox"
             aria-labelledby="listbox-label"
-            aria-activedescendant="listbox-item-3"
+            aria-activedescendant={value}
             className="py-1 overflow-auto text-base leading-6 rounded-md shadow-xs max-h-56 focus:outline-none sm:text-sm sm:leading-5"
           >
-            {items.map((name) => (
+            {items.map((name, index) => (
               <li
                 key={name}
-                id="listbox-item-0"
+                id={name}
+                tabIndex={index}
                 role="option"
                 className="relative py-2 pl-3 text-gray-900 cursor-default select-none pr-9 hover:bg-gray-200"
+                aria-selected={value === name}
                 onClick={() => {
                   setVisible(false);
                   setValue(name);
