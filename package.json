@@ -9,7 +9,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen --config codegen.yml",
-    "build:css": "postcss src/scss/tailwind/index.scss -o src/scss/tailwind/build.scss "
+    "build:css": "postcss src/styles/index.css -o src/styles/tailwind.css "
   },
   "dependencies": {
     "@apollo/react-hooks": "~3.1.5",
@@ -26,7 +26,6 @@
     "dayjs": "~1.8.28",
     "formik": "~2.1.5",
     "graphql": "~15.0.0",
-    "node-sass": "~4.14.1",
     "react": "~16.13.1",
     "react-dom": "~16.13.1",
     "react-scripts": "3.4.1",
