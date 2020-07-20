@@ -7,7 +7,7 @@ interface ModalFormProps {
   children: React.ReactNode;
   initialValues: Record<string, unknown>;
   validationSchema: ObjectSchema;
-  onSubmit: (values: Record<string, unknown>) => void;
+  onSubmit: (values: any) => void;
   onCancel: () => void;
 }
 
