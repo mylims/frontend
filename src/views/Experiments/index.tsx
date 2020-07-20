@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 
 import ExperimentForm from './ExperimentForm';
 
-import Tag from '../../components/Tag';
 import Error from '../../components/Error';
 
-import { hashColor } from '../../utils/color';
 import { Experiment, useExperimentsQuery } from '../../utils/generated';
 import Table, { TableColumn } from '../../components/Table';
 
 function renderTags(tags: string[]) {
   if (!tags) return null;
   return tags.map((tag) => (
-    <Tag color={hashColor(tag)} key={tag}>
-      {tag.toUpperCase()}
-    </Tag>
+    <span
+      key={tag}
+      className="inline-flex px-2 mr-1 text-xs font-semibold leading-5 text-blue-800 uppercase whitespace-no-wrap bg-blue-100 rounded-full"
+    >
+      {tag}
+    </span>
   ));
 }
 
@@ -22,7 +23,7 @@ function renderDate(initialDate: string) {
   const date = new Date(initialDate);
   return initialDate
     ? `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`
-    : '';
+    : 'None';
 }
 
 function stringSorter(key: 'codeId' | 'title') {

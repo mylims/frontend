@@ -312,8 +312,8 @@ export type Status = {
 };
 
 export type StatusInput = {
-  kind?: Maybe<Scalars['String']>;
-  date?: Maybe<Scalars['String']>;
+  kind: Scalars['String'];
+  date: Scalars['String'];
 };
 
 export type Experiment = {

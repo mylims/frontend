@@ -1,9 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
 
+import { useCreateExperimentMutation } from '../../utils/generated';
 import ModalForm from '../../components/ModalForm';
 import FormInput from '../../components/FormInput';
-import { useCreateExperimentMutation } from '../../utils/generated';
 import FormSelect from '../../components/FormSelect';
 import FormTags from '../../components/FormTags';
 
@@ -21,7 +21,7 @@ interface ExperimentInput {
 const ExperimentForm = ({ closeModal }: Props) => {
   const [createExperiment] = useCreateExperimentMutation();
 
-  const onCreate = (data: ExperimentInput) => {
+  const onSubmit = (data: ExperimentInput) => {
     const experiment = {
       ...data,
       owners: ['me'],
@@ -38,7 +38,7 @@ const ExperimentForm = ({ closeModal }: Props) => {
         title: Yup.string().required('Required'),
         status: Yup.string().required('Required'),
       })}
-      onSubmit={onCreate}
+      onSubmit={onSubmit}
       onCancel={() => closeModal(false)}
       title="Create experiment"
     >
