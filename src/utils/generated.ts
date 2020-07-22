@@ -529,6 +529,15 @@ export enum CacheControlScope {
 }
 
 
+export type ExperimentFieldsFragment = (
+  { __typename?: 'Experiment' }
+  & Pick<Experiment, '_id' | 'owners' | 'tags' | 'title' | 'description' | 'creationDate' | 'lastModificationDate'>
+  & { status?: Maybe<Array<(
+    { __typename?: 'Status' }
+    & Pick<Status, 'kind'>
+  )>> }
+);
+
 export type ExperimentsQueryVariables = Exact<{
   page: Scalars['Int'];
   filters: ExperimentFilters;
@@ -539,11 +548,7 @@ export type ExperimentsQuery = (
   { __typename?: 'Query' }
   & { experiments?: Maybe<Array<(
     { __typename?: 'Experiment' }
-    & Pick<Experiment, 'owners' | 'tags' | 'title' | 'description' | 'creationDate' | 'lastModificationDate'>
-    & { status?: Maybe<Array<(
-      { __typename?: 'Status' }
-      & Pick<Status, 'kind'>
-    )>> }
+    & ExperimentFieldsFragment
   )>> }
 );
 
@@ -556,26 +561,31 @@ export type CreateExperimentMutation = (
   { __typename?: 'Mutation' }
   & { createExperiment?: Maybe<(
     { __typename?: 'Experiment' }
-    & Pick<Experiment, '_id' | 'title'>
+    & ExperimentFieldsFragment
   )> }
 );
 
-
-export const ExperimentsDocument = gql`
-    query experiments($page: Int!, $filters: ExperimentFilters!) {
-  experiments(page: $page, filters: $filters) {
-    owners
-    tags
-    title
-    description
-    creationDate
-    lastModificationDate
-    status {
-      kind
-    }
+export const ExperimentFieldsFragmentDoc = gql`
+    fragment ExperimentFields on Experiment {
+  _id
+  owners
+  tags
+  title
+  description
+  creationDate
+  lastModificationDate
+  status {
+    kind
   }
 }
     `;
+export const ExperimentsDocument = gql`
+    query experiments($page: Int!, $filters: ExperimentFilters!) {
+  experiments(page: $page, filters: $filters) {
+    ...ExperimentFields
+  }
+}
+    ${ExperimentFieldsFragmentDoc}`;
 
 /**
  * __useExperimentsQuery__
@@ -609,11 +619,10 @@ export function refetchExperimentsQuery(variables?: ExperimentsQueryVariables) {
 export const CreateExperimentDocument = gql`
     mutation createExperiment($experiment: ExperimentInput!) {
   createExperiment(experiment: $experiment) {
-    _id
-    title
+    ...ExperimentFields
   }
 }
-    `;
+    ${ExperimentFieldsFragmentDoc}`;
 export type CreateExperimentMutationFn = ApolloReactCommon.MutationFunction<CreateExperimentMutation, CreateExperimentMutationVariables>;
 
 /**
