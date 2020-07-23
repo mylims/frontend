@@ -73,5 +73,5 @@ it('Error display', async () => {
     </MockedProvider>,
   );
   await wait();
-  expect(screen.getByText('GraphQL error: Error!')).toBeInTheDocument();
+  expect(screen.getByText('Error!')).toBeInTheDocument();
 });
