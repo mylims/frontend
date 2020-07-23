@@ -27,6 +27,7 @@ const ExperimentForm = ({ closeModal }: Props) => {
       const newExeperiment = data?.createExperiment;
       const response: { experiments: any[] } | null = cache.readQuery({
         query: ExperimentsDocument,
+        variables: { page: 0, filters: {} },
       });
       const experiments = response?.experiments || [];
       cache.writeQuery({
