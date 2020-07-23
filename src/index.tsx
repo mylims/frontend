@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from '@reach/router';
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
 import Experiments from './views/Experiments/index';
 import Home from './views/Home';
