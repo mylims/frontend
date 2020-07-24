@@ -2,12 +2,15 @@ import React from 'react';
 
 interface PaginatorProps {
   page: number;
-  step: number;
+  length: number;
   total: number;
 }
 
-const Paginator = ({ page, step, total }: PaginatorProps) => {
+const step = 10;
+
+const Paginator = ({ page, length, total }: PaginatorProps) => {
   const start = page * step;
+  const end = start + Math.min(step, length);
   const totalPages = Math.floor(total / step);
   const disablePrev = page === 0;
   const disableNext = page + 1 === totalPages;
@@ -37,7 +40,7 @@ const Paginator = ({ page, step, total }: PaginatorProps) => {
             Showing
             <span className="px-1 font-medium">{start + 1}</span>
             to
-            <span className="px-1 font-medium">{start + step}</span>
+            <span className="px-1 font-medium">{end}</span>
             of
             <span className="px-1 font-medium">{total}</span>
             results

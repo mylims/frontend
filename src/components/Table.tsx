@@ -1,5 +1,6 @@
 import React from 'react';
 import Paginator from './Paginator';
+import { getNumberUrlParam } from '../utils/filters';
 
 export interface TableColumn<T> {
   key: keyof T;
@@ -11,9 +12,10 @@ export interface TableColumn<T> {
 export interface TableProps<T> {
   data: Partial<T>[];
   columns: TableColumn<T>[];
+  totalCount: number;
 }
 
-export default function Table<T>({ data, columns }: TableProps<T>) {
+export default function Table<T>({ data, columns, totalCount }: TableProps<T>) {
   const content = data.map((value, index) => (
     <tr key={`row_${index}`}>
       {columns.map(({ key, render }) => (
@@ -26,6 +28,7 @@ export default function Table<T>({ data, columns }: TableProps<T>) {
       ))}
     </tr>
   ));
+
   return (
     <div className="flex flex-col">
       <div className="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -46,7 +49,11 @@ export default function Table<T>({ data, columns }: TableProps<T>) {
             <tbody className="bg-white">{content}</tbody>
           </table>
           {data.length > 0 ? (
-            <Paginator page={0} step={10} total={20} />
+            <Paginator
+              page={getNumberUrlParam('page')}
+              total={totalCount}
+              length={data.length}
+            />
           ) : (
             <div className="flex items-center justify-center">
               <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">

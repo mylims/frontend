@@ -81,6 +81,7 @@ const Experiments = (_: any) => {
     if (reload) refetch();
     setVisible(false);
   };
+  const { result = [], totalCount = 0 } = data?.experiments || {};
   return (
     <div>
       {visible ? <ExperimentForm closeModal={closeModal} /> : null}
@@ -119,7 +120,11 @@ const Experiments = (_: any) => {
       </header>
       <main>
         <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Table<Experiment> columns={columns} data={data?.experiments || []} />
+          <Table<Experiment>
+            columns={columns}
+            data={result || []}
+            totalCount={totalCount}
+          />
         </div>
       </main>
     </div>
