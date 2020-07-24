@@ -15795,6 +15795,11 @@ video {
   transition-delay: 1000ms;
 }
 
+.link-disable {
+  pointer-events: none;
+  cursor: default;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

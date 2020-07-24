@@ -4,8 +4,9 @@ import ExperimentForm from './ExperimentForm';
 
 import Error from '../../components/Error';
 
-import { Experiment, useExperimentsQuery } from '../../utils/generated';
 import Table, { TableColumn } from '../../components/Table';
+import { Experiment, useExperimentsQuery } from '../../utils/generated';
+import { getNumberUrlParam } from '../../utils/filters';
 
 function renderTags(tags: string[]) {
   if (!tags) return null;
@@ -69,7 +70,7 @@ const columns: TableColumn<Experiment>[] = [
 
 const Experiments = (_: any) => {
   const { loading, error, data, refetch } = useExperimentsQuery({
-    variables: { page: 0, filters: {} },
+    variables: { page: getNumberUrlParam('page'), filters: {} },
   });
   const [visible, setVisible] = useState(false);
 

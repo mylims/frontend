@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.link-disable {
+  pointer-events: none;
+  cursor: default;
+}
