@@ -75,7 +75,6 @@ const Experiments = (_: any) => {
   const [visible, setVisible] = useState(false);
 
   if (error) return <Error message={error.message} />;
-  if (loading) return <span>Loading</span>;
 
   const closeModal = (reload: boolean) => {
     if (reload) refetch();
@@ -124,6 +123,7 @@ const Experiments = (_: any) => {
             columns={columns}
             data={result || []}
             totalCount={totalCount}
+            loading={loading}
           />
         </div>
       </main>
