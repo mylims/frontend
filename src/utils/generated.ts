@@ -376,7 +376,6 @@ export type File = {
   _id: Scalars['String'];
   filename: Scalars['String'];
   hashname: Scalars['String'];
-  encoding: Scalars['String'];
   mimetype: Scalars['String'];
   creationDate: Scalars['String'];
   signedUrl: Scalars['String'];
@@ -385,7 +384,6 @@ export type File = {
 export type FileInput = {
   filename: Scalars['String'];
   hashname: Scalars['String'];
-  encoding: Scalars['String'];
   mimetype: Scalars['String'];
 };
 
@@ -569,6 +567,37 @@ export enum CacheControlScope {
 }
 
 
+export type FileFieldsFragment = (
+  { __typename?: 'File' }
+  & Pick<File, '_id' | 'filename' | 'hashname' | 'mimetype' | 'creationDate' | 'signedUrl'>
+);
+
+export type FileQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type FileQuery = (
+  { __typename?: 'Query' }
+  & { file?: Maybe<(
+    { __typename?: 'File' }
+    & FileFieldsFragment
+  )> }
+);
+
+export type CreateFileMutationVariables = Exact<{
+  file: FileInput;
+}>;
+
+
+export type CreateFileMutation = (
+  { __typename?: 'Mutation' }
+  & { createFile?: Maybe<(
+    { __typename?: 'File' }
+    & FileFieldsFragment
+  )> }
+);
+
 export type ExperimentFieldsFragment = (
   { __typename?: 'Experiment' }
   & Pick<Experiment, '_id' | 'owners' | 'tags' | 'title' | 'description' | 'creationDate' | 'lastModificationDate'>
@@ -609,6 +638,16 @@ export type CreateExperimentMutation = (
   )> }
 );
 
+export const FileFieldsFragmentDoc = gql`
+    fragment FileFields on File {
+  _id
+  filename
+  hashname
+  mimetype
+  creationDate
+  signedUrl
+}
+    `;
 export const ExperimentFieldsFragmentDoc = gql`
     fragment ExperimentFields on Experiment {
   _id
@@ -623,6 +662,74 @@ export const ExperimentFieldsFragmentDoc = gql`
   }
 }
     `;
+export const FileDocument = gql`
+    query file($id: String!) {
+  file(_id: $id) {
+    ...FileFields
+  }
+}
+    ${FileFieldsFragmentDoc}`;
+
+/**
+ * __useFileQuery__
+ *
+ * To run a query within a React component, call `useFileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FileQuery, FileQueryVariables>) {
+        return ApolloReactHooks.useQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+      }
+export function useFileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FileQuery, FileQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+        }
+export type FileQueryHookResult = ReturnType<typeof useFileQuery>;
+export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>;
+export type FileQueryResult = ApolloReactCommon.QueryResult<FileQuery, FileQueryVariables>;
+export function refetchFileQuery(variables?: FileQueryVariables) {
+      return { query: FileDocument, variables: variables }
+    }
+export const CreateFileDocument = gql`
+    mutation createFile($file: FileInput!) {
+  createFile(file: $file) {
+    ...FileFields
+  }
+}
+    ${FileFieldsFragmentDoc}`;
+export type CreateFileMutationFn = ApolloReactCommon.MutationFunction<CreateFileMutation, CreateFileMutationVariables>;
+
+/**
+ * __useCreateFileMutation__
+ *
+ * To run a mutation, you first call `useCreateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFileMutation, { data, loading, error }] = useCreateFileMutation({
+ *   variables: {
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useCreateFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateFileMutation, CreateFileMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, baseOptions);
+      }
+export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutation>;
+export type CreateFileMutationResult = ApolloReactCommon.MutationResult<CreateFileMutation>;
+export type CreateFileMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateFileMutation, CreateFileMutationVariables>;
 export const ExperimentsDocument = gql`
     query experiments($page: Int!, $filters: ExperimentFilters!) {
   experiments(page: $page, filters: $filters) {
