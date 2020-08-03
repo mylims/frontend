@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { useCreateFileMutation } from './generated';
 
 export interface TemporalFile {
@@ -10,10 +10,29 @@ export interface TemporalFile {
 
 type ResponseFile = Omit<TemporalFile, 'content'>;
 
+export interface StateFile {
+  data: ResponseFile | null;
+  error: any[] | null;
+  loading: boolean;
+}
+
+function uploadReducer(
+  state: StateFile,
+  action: { type: string; payload: any },
+) {
+  switch (action.type) {
+    case 'error':
+      return { data: null, error: [action.payload], loading: false };
+    case 'result':
+      return { data: action.payload, error: null, loading: false };
+    default:
+      throw new Error();
+  }
+}
+
 export function useUploadFile(file: TemporalFile) {
-  const [result, setResult] = useState<ResponseFile | null>(null);
-  const [error, setError] = useState<any[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const initialState = { data: null, loading: true, error: null };
+  const [state, dispatch] = useReducer(uploadReducer, initialState);
   const [createFile] = useCreateFileMutation();
 
   useEffect(() => {
@@ -25,16 +44,14 @@ export function useUploadFile(file: TemporalFile) {
           variables: { file: tempFile },
         });
         if (errors) {
-          setError([errors]);
-          setLoading(false);
+          dispatch({ type: 'error', payload: errors });
           return null;
         }
 
         // Fetch the signed URL from the response
         const url = data?.createFile?.signedUrl;
         if (!url) {
-          setError(['Empty signedUrl']);
-          setLoading(false);
+          dispatch({ type: 'error', payload: 'Empty signedUrl' });
           return null;
         }
 
@@ -50,16 +67,16 @@ export function useUploadFile(file: TemporalFile) {
         const response = await json();
 
         if (response.error) {
-          setError([response.error]);
+          dispatch({ type: 'error', payload: response.error });
         } else {
-          setResult(tempFile);
+          dispatch({ type: 'result', payload: tempFile });
         }
       } catch (error) {
-        setLoading(false);
+        dispatch({ type: 'error', payload: error });
       }
     }
     uploadFile();
   }, [file]);
 
-  return { data: result, loading, error };
+  return state;
 }
