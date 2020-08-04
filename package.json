@@ -7,6 +7,7 @@
     "start": "npm run build:css && react-scripts start",
     "build": "npm run build:css && react-scripts build",
     "test": "react-scripts test",
+    "test-cache": "jest --clear-cache",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen --config codegen.yml",
     "build:css": "postcss src/styles/index.css -o src/styles/tailwind.css "

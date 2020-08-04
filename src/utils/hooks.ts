@@ -1,5 +1,5 @@
-import { useState, useEffect, useReducer } from 'react';
-import { useCreateFileMutation } from './generated';
+import { useEffect, useReducer } from 'react';
+import { useCreateFileMutation, useFileQuery } from './generated';
 
 export interface TemporalFile {
   filename: string;
@@ -8,18 +8,7 @@ export interface TemporalFile {
   content: string | ArrayBuffer;
 }
 
-type ResponseFile = Omit<TemporalFile, 'content'>;
-
-export interface StateFile {
-  data: ResponseFile | null;
-  error: any[] | null;
-  loading: boolean;
-}
-
-function uploadReducer(
-  state: StateFile,
-  action: { type: string; payload: any },
-) {
+function uploadReducer<T>(state: T, action: { type: string; payload: any }) {
   switch (action.type) {
     case 'error':
       return { data: null, error: [action.payload], loading: false };
@@ -79,4 +68,48 @@ export function useUploadFile(file: TemporalFile) {
   }, [file]);
 
   return state;
+}
+
+export function useDownloadFile(id: string) {
+  const initialState = { data: null, loading: true, error: null };
+  const [state, dispatch] = useReducer(uploadReducer, initialState);
+  const { data, loading, error } = useFileQuery({ variables: { id } });
+
+  // console.log({ state, query: { data, loading, error } });
+
+  useEffect(() => {
+    async function downloadFile() {
+      try {
+        // Fetch signed URL
+        const url = data?.file?.signedUrl;
+        if (!url) {
+          dispatch({ type: 'error', payload: 'No signed URL provided' });
+          return null;
+        }
+
+        // Send the file to the filesystem microservice
+        const response = await fetch(url, { method: 'GET' });
+        const json = await response.json();
+        const blob = await response.blob();
+
+        if (json.error) {
+          dispatch({ type: 'error', payload: json.error });
+        } else {
+          const href = window.URL.createObjectURL(blob);
+          const filename = data?.file?.filename;
+          dispatch({ type: 'result', payload: { filename, href } });
+        }
+      } catch (error) {
+        dispatch({ type: 'error', payload: error });
+      }
+    }
+
+    if (!loading && data?.file) downloadFile();
+  }, [data, loading]);
+
+  return {
+    data: state.data,
+    loading: state.loading || loading,
+    error: state.error || (error && [error]),
+  };
 }
