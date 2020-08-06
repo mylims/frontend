@@ -7,7 +7,7 @@ import { FileDocument } from '../generated';
 
 const DownloadFile = ({ id }: { id: string }) => {
   const { data, loading, error } = useDownloadFile(id);
-  // if (error) console.error(error);
+  if (error) console.error(error);
   return (
     <div data-testid="download">
       <div data-testid="data">{JSON.stringify(data)}</div>
