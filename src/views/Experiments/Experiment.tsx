@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import ExperimentForm from './ExperimentForm';
 
 import Error from '../../components/Error';
-
 import Table, { TableColumn } from '../../components/Table';
+
 import { Experiment, useExperimentsQuery } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
 

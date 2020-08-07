@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Router } from '@reach/router';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
-import Experiments from './views/Experiments/index';
+import Experiments from './views/Experiments/Experiment';
 import Home from './views/Home';
 import Layout from './components/Layout';
 

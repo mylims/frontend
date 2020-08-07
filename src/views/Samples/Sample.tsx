@@ -1,155 +1,98 @@
-import React, { useState } from "react";
-import { Table, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { ColumnProps } from "antd/es/table";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import React, { useState } from 'react';
 
-import SampleForm from "./SampleForm";
+import SampleForm from './SampleForm';
 
-import {
-  TableSearch,
-  filterIcon,
-  onFilter,
-} from "../../components/TableSearch";
-import Tag from "../../components/Tag";
-import Error from "../../components/Error";
+import Error from '../../components/Error';
+import Table, { TableColumn } from '../../components/Table';
 
-import { hashColor } from "../../utils";
+import { Sample, useSamplesQuery } from '../../utils/generated';
+import { getNumberUrlParam } from '../../utils/filters';
 
-export const SAMPLES = gql`
-  {
-    sampleByOwner(owner: "me") {
-      owners
-      tags
-      title
-      description
-      creationDate
-      lastModificationDate
-      status {
-        kind
-      }
-    }
-  }
-`;
-
-interface Sample {
-  codeId: string;
-  owners: string[];
-  tags: string[];
-  title: string;
-  description?: string;
-  creationDate: string;
-  lastModificationDate?: string;
-  status?: { kind: string };
-}
-
-interface SamplesData {
-  sampleByOwner: Sample[];
-}
-
-function renderTags(tags: string[]) {
-  if (!tags) return null;
-  return tags.map((tag) => (
-    <Tag color={hashColor(tag)} key={tag}>
-      {tag.toUpperCase()}
-    </Tag>
-  ));
-}
-
-function renderDate(initialDate: string) {
-  const date = new Date(initialDate);
-  return initialDate
-    ? `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`
-    : "";
-}
-
-function stringSorter(key: "codeId" | "title") {
+function stringSorter(key: 'codeId' | 'title') {
   return (a: Sample, b: Sample) => a[key].localeCompare(b[key]);
 }
 
-const columns: ColumnProps<Sample>[] = [
+const columns: TableColumn<Sample>[] = [
   {
-    key: "title",
-    title: "Title",
-    dataIndex: "title",
-    sorter: stringSorter("title"),
-    sortDirections: ["descend", "ascend"],
-    filterDropdown: (props) => <TableSearch {...props} dataIndex="title" />,
-    filterIcon,
-    onFilter: (value, record) => onFilter<Sample>(value, record, "title"),
+    key: 'title',
+    title: 'Title',
+    sorter: stringSorter('title'),
   },
   {
-    key: "description",
-    title: "Description",
-    dataIndex: "description",
-    filterDropdown: (props) => (
-      <TableSearch {...props} dataIndex="description" />
-    ),
-    filterIcon,
-    onFilter: (value, record) => onFilter<Sample>(value, record, "description"),
+    key: 'description',
+    title: 'Description',
   },
   {
-    key: "owners",
-    title: "Owners",
-    dataIndex: "owners",
-    render: renderTags,
+    key: 'codeId',
+    title: 'Code',
+    sorter: stringSorter('codeId'),
   },
   {
-    key: "tags",
-    title: "Tags",
-    dataIndex: "tags",
-    render: renderTags,
-  },
-  {
-    key: "creationDate",
-    title: "Creation date",
-    dataIndex: "creationDate",
-    render: renderDate,
-  },
-  {
-    key: "lastModificationDate",
-    title: "Last modification date",
-    dataIndex: "lastModificationDate",
-    render: renderDate,
-  },
-  {
-    key: "status",
-    title: "Status",
-    dataIndex: "status",
-    render: (value) => (value ? value[0].kind : null),
+    key: 'status',
+    title: 'Status',
+    render: (value: Sample['status']) => (value ? value[0].kind : null),
   },
 ];
 
-const Samples = (props: any) => {
-  const { loading, error, data, refetch } = useQuery<SamplesData>(SAMPLES);
+const Samples = (_: any) => {
+  const { loading, error, data, refetch } = useSamplesQuery({
+    variables: { page: getNumberUrlParam('page'), filters: {} },
+  });
   const [visible, setVisible] = useState(false);
 
   if (error) return <Error message={error.message} />;
-  const dataSource = data ? data.sampleByOwner : [];
 
   const closeModal = (reload: boolean) => {
-    if (reload) {
-      refetch();
-    }
+    if (reload) refetch();
     setVisible(false);
   };
-
+  const { result = [], totalCount = 0 } = data?.samples || {};
   return (
-    <div className="samples">
-      <SampleForm visible={visible} closeModal={closeModal} />
-      <div className="samples__header">
-        <h2>Samples</h2>
-        <Button onClick={() => setVisible(true)}>
-          <PlusOutlined />
-          Add new sample
-        </Button>
-      </div>
-      <Table<Sample>
-        columns={columns}
-        dataSource={dataSource}
-        loading={loading}
-      />
+    <div>
+      {visible ? <SampleForm closeModal={closeModal} /> : null}
+      <header className="bg-white shadow">
+        <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="lg:flex lg:items-center lg:justify-between">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
+                Samples
+              </h2>
+            </div>
+            <div className="flex mt-5 lg:mt-0 lg:ml-4">
+              <span className="rounded-md shadow-sm sm:ml-3">
+                <button
+                  type="button"
+                  onClick={() => setVisible(true)}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2 -ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Add new sample
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <Table<Sample>
+            columns={columns}
+            data={result || []}
+            totalCount={totalCount}
+            loading={loading}
+          />
+        </div>
+      </main>
     </div>
   );
 };

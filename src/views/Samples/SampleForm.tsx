@@ -1,83 +1,78 @@
-import React from "react";
-import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { Form, Input, Select } from "antd";
-import { Store } from "antd/lib/form/interface";
+import React from 'react';
+import * as Yup from 'yup';
 
-import ModalForm from "../../components/ModalForm";
-
-const { Item } = Form;
-const { Option } = Select;
+import {
+  useCreateSampleMutation,
+  SamplesDocument,
+} from '../../utils/generated';
+import { getNumberUrlParam } from '../../utils/filters';
+import ModalForm from '../../components/ModalForm';
+import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
 
 interface Props {
-  visible: boolean;
   closeModal: (reload: boolean) => void;
 }
 
 interface SampleInput {
-  owners: string[];
-  tags: string[];
   title: string;
   description?: string;
-  status: Array<{ kind: string; date: string }>;
+  tags: string[];
+  status: string;
 }
 
-const CREATE_SAMPLE = gql`
-  mutation createSample($sample: SampleInput!) {
-    createSample(sample: $sample) {
-      _id
-      title
-    }
-  }
-`;
+const SampleForm = ({ closeModal }: Props) => {
+  const [createSample] = useCreateSampleMutation({
+    update(cache, { data }) {
+      const newSample = data?.createSample;
+      const response: { samples: any[] } | null = cache.readQuery({
+        query: SamplesDocument,
+        variables: { page: getNumberUrlParam('page'), filters: {} },
+      });
+      const samples = response?.samples || [];
+      cache.writeQuery({
+        query: SamplesDocument,
+        data: { samples: [...samples, newSample] },
+      });
+    },
+  });
 
-const SampleForm = ({ visible, closeModal }: Props) => {
-  const [createSample, { loading, error }] = useMutation<SampleInput>(
-    CREATE_SAMPLE
-  );
-
-  const onCreate = (data: Store) => {
+  const onSubmit = (data: SampleInput) => {
     const sample = {
       ...data,
-      owners: ["me"],
-      status: [{ kind: data.status, date: new Date().toString() }],
+      status: { kind: data.status, date: new Date().toString() },
     };
-    createSample({ variables: { sample } });
+    createSample({
+      variables: { sample },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createSample: {
+          __typename: 'Sample',
+          _id: 'optimistic',
+          codeId: 'optimistic',
+          title: sample.title,
+          description: sample.description,
+          status: [sample.status],
+        },
+      },
+    });
     closeModal(true);
   };
 
-  const required = (title: string) => [
-    { required: true, message: `Please input the ${title}` },
-  ];
-
   return (
     <ModalForm
-      name="sample"
-      visible={visible}
-      onCreate={onCreate}
+      initialValues={{ title: '', description: '', status: '' }}
+      validationSchema={Yup.object({
+        title: Yup.string().required('Required'),
+        status: Yup.string().required('Required'),
+      })}
+      onSubmit={onSubmit}
       onCancel={() => closeModal(false)}
-      loading={loading}
+      title="Create sample"
     >
-      <Item name="title" label="Title" rules={required("title")}>
-        <Input />
-      </Item>
-      <Item name="description" label="Description">
-        <Input type="textarea" />
-      </Item>
-      <Item name="tags" label="Tags">
-        <Select placeholder="Add a tag" mode="tags" defaultValue={[]} />
-      </Item>
-      <Item name="status" label="Status" rules={required("status")}>
-        <Select placeholder="Select a status" allowClear>
-          <Option value="active">active</Option>
-          <Option value="inactive">inactive</Option>
-        </Select>
-      </Item>
-      {error && (
-        <div style={{ color: "#c51244" }}>
-          An error has ocurred, please try again
-        </div>
-      )}
+      <FormInput label="Title" name="title" />
+      <FormInput label="Description" name="description" />
+      <FormSelect label="Status" name="status" items={['active', 'inactive']} />
     </ModalForm>
   );
 };
