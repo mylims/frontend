@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import {
   useCreateSampleMutation,
   SamplesDocument,
+  SamplePage,
 } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
 import ModalForm from '../../components/ModalForm';
@@ -25,14 +26,19 @@ const SampleForm = ({ closeModal }: Props) => {
   const [createSample] = useCreateSampleMutation({
     update(cache, { data }) {
       const newSample = data?.createSample;
-      const response: { samples: any[] } | null = cache.readQuery({
+      const response: { samples: SamplePage } | null = cache.readQuery({
         query: SamplesDocument,
         variables: { page: getNumberUrlParam('page'), filters: {} },
       });
-      const samples = response?.samples || [];
+      const samples = response?.samples?.result || [];
       cache.writeQuery({
         query: SamplesDocument,
-        data: { samples: [...samples, newSample] },
+        data: {
+          samples: {
+            result: [...samples, newSample],
+            totalCount: (response?.samples?.totalCount || 0) + 1,
+          },
+        },
       });
     },
   });

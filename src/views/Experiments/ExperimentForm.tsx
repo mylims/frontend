@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import {
   useCreateExperimentMutation,
   ExperimentsDocument,
+  ExperimentPage,
 } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
 import ModalForm from '../../components/ModalForm';
@@ -25,15 +26,20 @@ interface ExperimentInput {
 const ExperimentForm = ({ closeModal }: Props) => {
   const [createExperiment] = useCreateExperimentMutation({
     update(cache, { data }) {
-      const newExeperiment = data?.createExperiment;
-      const response: { experiments: any[] } | null = cache.readQuery({
+      const newExperiment = data?.createExperiment;
+      const response: { experiments: ExperimentPage } | null = cache.readQuery({
         query: ExperimentsDocument,
         variables: { page: getNumberUrlParam('page'), filters: {} },
       });
-      const experiments = response?.experiments || [];
+      const experiments = response?.experiments?.result || [];
       cache.writeQuery({
         query: ExperimentsDocument,
-        data: { experiments: [...experiments, newExeperiment] },
+        data: {
+          experiments: {
+            result: [...experiments, newExperiment],
+            totalCount: (response?.experiments?.totalCount || 0) + 1,
+          },
+        },
       });
     },
   });

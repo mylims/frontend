@@ -4,6 +4,7 @@ import { Router } from '@reach/router';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
 import Experiments from './views/Experiments/Experiment';
+import Samples from './views/Samples/Sample';
 import Home from './views/Home';
 import Layout from './components/Layout';
 
@@ -18,6 +19,7 @@ const client = new ApolloClient({
 const routes = [
   { path: '/', name: 'Home', Component: Home },
   { path: '/experiments', name: 'Experiments', Component: Experiments },
+  { path: '/samples', name: 'Samples', Component: Samples },
 ];
 const menuRoutes = routes.map(({ path, name }) => ({ path, name }));
 

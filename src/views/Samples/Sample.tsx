@@ -14,6 +14,11 @@ function stringSorter(key: 'codeId' | 'title') {
 
 const columns: TableColumn<Sample>[] = [
   {
+    key: 'codeId',
+    title: 'Code',
+    sorter: stringSorter('codeId'),
+  },
+  {
     key: 'title',
     title: 'Title',
     sorter: stringSorter('title'),
@@ -21,11 +26,6 @@ const columns: TableColumn<Sample>[] = [
   {
     key: 'description',
     title: 'Description',
-  },
-  {
-    key: 'codeId',
-    title: 'Code',
-    sorter: stringSorter('codeId'),
   },
   {
     key: 'status',
