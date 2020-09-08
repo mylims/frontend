@@ -139,6 +139,7 @@ export type Mutation = {
   appendSampleMeasurement?: Maybe<Measurement>;
   createUser: AuthUser;
   updateUser: User;
+  appendUserGroup: User;
 };
 
 export type MutationCreateComponentArgs = {
@@ -249,6 +250,11 @@ export type MutationUpdateUserArgs = {
   user: UserInput;
 };
 
+export type MutationAppendUserGroupArgs = {
+  _id: Scalars['String'];
+  group: Scalars['String'];
+};
+
 export type Component = {
   __typename?: 'Component';
   _id: Scalars['String'];
@@ -267,7 +273,6 @@ export type ComponentInput = {
 
 export type ComponentFilters = {
   kind: Scalars['String'];
-  content?: Maybe<Scalars['JSON']>;
 };
 
 export type ComponentPage = Pagination & {
@@ -291,7 +296,7 @@ export type Experiment = {
   __typename?: 'Experiment';
   _id: Scalars['String'];
   codeId: Scalars['String'];
-  owners?: Maybe<Array<Scalars['String']>>;
+  owners?: Maybe<Array<User>>;
   tags?: Maybe<Array<Scalars['String']>>;
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -551,13 +556,15 @@ export type CreateFileMutation = { __typename?: 'Mutation' } & {
 export type ExperimentFieldsFragment = { __typename?: 'Experiment' } & Pick<
   Experiment,
   | '_id'
-  | 'owners'
   | 'tags'
   | 'title'
   | 'description'
   | 'creationDate'
   | 'lastModificationDate'
-> & { status?: Maybe<Array<{ __typename?: 'Status' } & Pick<Status, 'kind'>>> };
+> & {
+    owners?: Maybe<Array<{ __typename?: 'User' } & Pick<User, '_id' | 'name'>>>;
+    status?: Maybe<Array<{ __typename?: 'Status' } & Pick<Status, 'kind'>>>;
+  };
 
 export type ExperimentsQueryVariables = Exact<{
   page: Scalars['Int'];
@@ -621,7 +628,10 @@ export const FileFieldsFragmentDoc = gql`
 export const ExperimentFieldsFragmentDoc = gql`
   fragment ExperimentFields on Experiment {
     _id
-    owners
+    owners {
+      _id
+      name
+    }
     tags
     title
     description

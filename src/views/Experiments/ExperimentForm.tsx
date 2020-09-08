@@ -59,7 +59,7 @@ const ExperimentForm = ({ closeModal }: Props) => {
           _id: 'optimistic',
           title: experiment.title,
           description: experiment.description,
-          owners: experiment.owners,
+          owners: experiment.owners.map((_id) => ({ _id, name: '' })),
           status: [experiment.status],
           creationDate: new Date().toString(),
         },

@@ -5,7 +5,11 @@ import ExperimentForm from './ExperimentForm';
 import Error from '../../components/Error';
 import Table, { TableColumn } from '../../components/Table';
 
-import { Experiment, useExperimentsQuery } from '../../utils/generated';
+import {
+  Experiment,
+  useExperimentsQuery,
+  ExperimentFieldsFragment,
+} from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
 
 function renderTags(tags: string[]) {
@@ -31,7 +35,7 @@ function stringSorter(key: 'codeId' | 'title') {
   return (a: Experiment, b: Experiment) => a[key].localeCompare(b[key]);
 }
 
-const columns: TableColumn<Experiment>[] = [
+const columns: TableColumn<ExperimentFieldsFragment>[] = [
   {
     key: 'title',
     title: 'Title',
@@ -119,7 +123,7 @@ const Experiments = (_: any) => {
       </header>
       <main>
         <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Table<Experiment>
+          <Table<ExperimentFieldsFragment>
             columns={columns}
             data={result || []}
             totalCount={totalCount}
