@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 
 import ExperimentForm from './ExperimentForm';
 
+import Tag from '../../components/Tag';
 import Error from '../../components/Error';
 import Table, { TableColumn } from '../../components/Table';
 
 import {
+  User,
   Experiment,
   useExperimentsQuery,
   ExperimentFieldsFragment,
@@ -14,14 +16,7 @@ import { getNumberUrlParam } from '../../utils/filters';
 
 function renderTags(tags: string[]) {
   if (!tags) return null;
-  return tags.map((tag) => (
-    <span
-      key={tag}
-      className="inline-flex px-2 mr-1 text-xs font-semibold leading-5 text-blue-800 uppercase whitespace-no-wrap bg-blue-100 rounded-full"
-    >
-      {tag}
-    </span>
-  ));
+  return tags.map((tag) => <Tag key={tag}>{tag}</Tag>);
 }
 
 function renderDate(initialDate: string) {
@@ -29,6 +24,12 @@ function renderDate(initialDate: string) {
   return initialDate
     ? `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`
     : 'None';
+}
+
+function renderOwners(owners: Array<null | User>) {
+  const reducer = (acc: React.ReactNode[], curr: null | User) =>
+    curr ? [...acc, <Tag key={curr._id}>{curr.name}</Tag>] : acc;
+  return owners.reduce(reducer, []);
 }
 
 function stringSorter(key: 'codeId' | 'title') {
@@ -48,7 +49,7 @@ const columns: TableColumn<ExperimentFieldsFragment>[] = [
   {
     key: 'owners',
     title: 'Owners',
-    render: renderTags,
+    render: renderOwners,
   },
   {
     key: 'tags',
