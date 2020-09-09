@@ -2419,6 +2419,11 @@ video {
   line-height: 1.75rem;
 }
 
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -2854,16 +2859,6 @@ video {
   transform-origin: top right;
 }
 
-.scale-95 {
-  --transform-scale-x: .95;
-  --transform-scale-y: .95;
-}
-
-.scale-100 {
-  --transform-scale-x: 1;
-  --transform-scale-y: 1;
-}
-
 .translate-y-0 {
   --transform-translate-y: 0;
 }
@@ -2894,14 +2889,6 @@ video {
 
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.duration-75 {
-  transition-duration: 75ms;
-}
-
-.duration-100 {
-  transition-duration: 100ms;
 }
 
 .duration-150 {

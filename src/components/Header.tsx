@@ -65,8 +65,8 @@ const Header = ({ routes, path }: HeaderProps) => {
                     to={key}
                     className={
                       path === key
-                        ? 'px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md focus:outline-none focus:text-white focus:bg-gray-700'
-                        : 'px-3 py-2 text-sm font-medium leading-5 text-gray-300 transition duration-150 ease-in-out rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700'
+                        ? 'mx-1 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md focus:outline-none focus:text-white focus:bg-gray-700 '
+                        : 'mx-1 px-3 py-2 text-sm font-medium leading-5 text-gray-300 transition duration-150 ease-in-out rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700'
                     }
                   >
                     {name}
@@ -102,16 +102,7 @@ const Header = ({ routes, path }: HeaderProps) => {
                   </svg>
                 </button>
               </div>
-              {/*
-                Profile dropdown panel, show/hide based on dropdown state.
 
-                Entering: "transition ease-out duration-100"
-                  From: "transform opacity-0 scale-95"
-                  To: "transform opacity-100 scale-100"
-                Leaving: "transition ease-in duration-75"
-                  From: "transform opacity-100 scale-100"
-                  To: "transform opacity-0 scale-95"
-              */}
               <div
                 className={`${
                   userMenu ? 'absolute' : 'hidden'
@@ -123,8 +114,15 @@ const Header = ({ routes, path }: HeaderProps) => {
                   aria-orientation="vertical"
                   aria-labelledby="user-menu"
                 >
-                  <button
+                  <Link
+                    to="/profile"
+                    role="menuitem"
                     className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                  >
+                    My profile
+                  </Link>
+                  <button
+                    className="block w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                     role="menuitem"
                   >
                     Sign out
