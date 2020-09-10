@@ -19,7 +19,10 @@ const Signin = (_: any) => {
 
   // Redirect on success
   if (clicked && data?.signin) {
-    localStorage.setItem('token', data?.signin?.token);
+    const { token, user } = data.signin;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user_id', user._id);
+    localStorage.setItem('user', JSON.stringify(user));
     navigate('/');
   }
 

@@ -12,7 +12,7 @@ const Header = ({ routes, path }: HeaderProps) => {
   const navigate = useNavigate();
 
   const signOut = () => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     navigate('/singin');
   };
 
