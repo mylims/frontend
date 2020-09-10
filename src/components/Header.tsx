@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from '@reach/router';
+import { Link, useNavigate } from '@reach/router';
 
 interface HeaderProps {
   routes: Array<{ name: string; path: string }>;
@@ -9,6 +9,13 @@ interface HeaderProps {
 const Header = ({ routes, path }: HeaderProps) => {
   const [toogle, setToogle] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const signOut = () => {
+    localStorage.removeItem('token');
+    navigate('/singin');
+  };
+
   return (
     <nav className="bg-gray-800">
       <div className="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -124,6 +131,7 @@ const Header = ({ routes, path }: HeaderProps) => {
                   <button
                     className="block w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                     role="menuitem"
+                    onClick={signOut}
                   >
                     Sign out
                   </button>
