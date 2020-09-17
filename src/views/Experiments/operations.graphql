@@ -1,14 +1,7 @@
 fragment ExperimentFields on Experiment {
   _id
-  owners {
-    _id
-    name
-  }
-  tags
   title
   description
-  creationDate
-  lastModificationDate
   status {
     kind
   }
