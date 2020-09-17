@@ -5,14 +5,18 @@ import SampleForm from './SampleForm';
 import Error from '../../components/Error';
 import Table, { TableColumn } from '../../components/Table';
 
-import { Sample, useSamplesQuery } from '../../utils/generated';
+import {
+  Sample,
+  SampleFieldsFragment,
+  useSamplesQuery,
+} from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
 
 function stringSorter(key: 'codeId' | 'title') {
   return (a: Sample, b: Sample) => a[key].localeCompare(b[key]);
 }
 
-const columns: TableColumn<Sample>[] = [
+const columns: TableColumn<SampleFieldsFragment>[] = [
   {
     key: 'codeId',
     title: 'Code',
@@ -85,7 +89,7 @@ const Samples = (_: any) => {
       </header>
       <main>
         <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Table<Sample>
+          <Table<SampleFieldsFragment>
             columns={columns}
             data={result || []}
             totalCount={totalCount}

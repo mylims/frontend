@@ -516,10 +516,14 @@ export type CreateFileMutation = (
 
 export type ExperimentFieldsFragment = (
   { __typename?: 'Experiment' }
-  & Pick<Experiment, '_id' | 'title' | 'description'>
+  & Pick<Experiment, '_id' | 'codeId' | 'title' | 'description'>
   & { status?: Maybe<Array<(
     { __typename?: 'Status' }
-    & Pick<Status, 'kind'>
+    & Pick<Status, 'kind' | 'date'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'name'>
+    )> }
   )>> }
 );
 
@@ -551,6 +555,46 @@ export type CreateExperimentMutation = (
   & { createExperiment?: Maybe<(
     { __typename?: 'Experiment' }
     & ExperimentFieldsFragment
+  )> }
+);
+
+export type ProjectFieldsFragment = (
+  { __typename?: 'Project' }
+  & Pick<Project, '_id' | 'title' | 'description'>
+  & { status?: Maybe<Array<(
+    { __typename?: 'Status' }
+    & Pick<Status, 'kind'>
+  )>> }
+);
+
+export type ProjectsQueryVariables = Exact<{
+  page: Scalars['Int'];
+  filters: ProjectFilters;
+}>;
+
+
+export type ProjectsQuery = (
+  { __typename?: 'Query' }
+  & { projects?: Maybe<(
+    { __typename?: 'ProjectPage' }
+    & Pick<ProjectPage, 'totalCount'>
+    & { result?: Maybe<Array<(
+      { __typename?: 'Project' }
+      & ProjectFieldsFragment
+    )>> }
+  )> }
+);
+
+export type CreateProjectMutationVariables = Exact<{
+  project: ProjectInput;
+}>;
+
+
+export type CreateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { createProject?: Maybe<(
+    { __typename?: 'Project' }
+    & ProjectFieldsFragment
   )> }
 );
 
@@ -646,6 +690,22 @@ export const FileFieldsFragmentDoc = gql`
     `;
 export const ExperimentFieldsFragmentDoc = gql`
     fragment ExperimentFields on Experiment {
+  _id
+  codeId
+  title
+  description
+  status {
+    kind
+    date
+    user {
+      _id
+      name
+    }
+  }
+}
+    `;
+export const ProjectFieldsFragmentDoc = gql`
+    fragment ProjectFields on Project {
   _id
   title
   description
@@ -813,6 +873,78 @@ export function useCreateExperimentMutation(baseOptions?: ApolloReactHooks.Mutat
 export type CreateExperimentMutationHookResult = ReturnType<typeof useCreateExperimentMutation>;
 export type CreateExperimentMutationResult = ApolloReactCommon.MutationResult<CreateExperimentMutation>;
 export type CreateExperimentMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateExperimentMutation, CreateExperimentMutationVariables>;
+export const ProjectsDocument = gql`
+    query projects($page: Int!, $filters: ProjectFilters!) {
+  projects(page: $page, filters: $filters) {
+    result {
+      ...ProjectFields
+    }
+    totalCount
+  }
+}
+    ${ProjectFieldsFragmentDoc}`;
+
+/**
+ * __useProjectsQuery__
+ *
+ * To run a query within a React component, call `useProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectsQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useProjectsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ProjectsQuery, ProjectsQueryVariables>) {
+        return ApolloReactHooks.useQuery<ProjectsQuery, ProjectsQueryVariables>(ProjectsDocument, baseOptions);
+      }
+export function useProjectsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProjectsQuery, ProjectsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ProjectsQuery, ProjectsQueryVariables>(ProjectsDocument, baseOptions);
+        }
+export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
+export type ProjectsLazyQueryHookResult = ReturnType<typeof useProjectsLazyQuery>;
+export type ProjectsQueryResult = ApolloReactCommon.QueryResult<ProjectsQuery, ProjectsQueryVariables>;
+export function refetchProjectsQuery(variables?: ProjectsQueryVariables) {
+      return { query: ProjectsDocument, variables: variables }
+    }
+export const CreateProjectDocument = gql`
+    mutation createProject($project: ProjectInput!) {
+  createProject(project: $project) {
+    ...ProjectFields
+  }
+}
+    ${ProjectFieldsFragmentDoc}`;
+export type CreateProjectMutationFn = ApolloReactCommon.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      project: // value for 'project'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, baseOptions);
+      }
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = ApolloReactCommon.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const SamplesDocument = gql`
     query samples($page: Int!, $filters: SampleFilters!) {
   samples(page: $page, filters: $filters) {

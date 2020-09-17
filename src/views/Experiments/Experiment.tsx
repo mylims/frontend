@@ -47,26 +47,6 @@ const columns: TableColumn<ExperimentFieldsFragment>[] = [
     title: 'Description',
   },
   {
-    key: 'owners',
-    title: 'Owners',
-    render: renderOwners,
-  },
-  {
-    key: 'tags',
-    title: 'Tags',
-    render: renderTags,
-  },
-  {
-    key: 'creationDate',
-    title: 'Creation date',
-    render: renderDate,
-  },
-  {
-    key: 'lastModificationDate',
-    title: 'Last modification date',
-    render: renderDate,
-  },
-  {
     key: 'status',
     title: 'Status',
     render: (value: Experiment['status']) => (value ? value[0].kind : null),
