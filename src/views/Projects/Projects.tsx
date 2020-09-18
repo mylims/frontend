@@ -2,48 +2,22 @@ import React, { useState } from 'react';
 
 import ProjectForm from './ProjectForm';
 
-import Tag from '../../components/Tag';
 import Error from '../../components/Error';
 import Table, { TableColumn } from '../../components/Table';
 
 import {
-  User,
-  useProjectsQuery,
   Project,
   ProjectFieldsFragment,
+  useProjectsQuery,
 } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
-
-function renderTags(tags: string[]) {
-  if (!tags) return null;
-  return tags.map((tag) => <Tag key={tag}>{tag}</Tag>);
-}
-
-function renderCreationDate(status: Project['status']) {
-  if (!status || status.length < 1) return 'None';
-  const initialStatus = status.sort((a, b) => a.date.localeCompare(b.date))[0];
-  const date = new Date(initialStatus.date);
-  return `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`;
-}
-
-function renderLastDate(status: Project['status']) {
-  if (!status || status.length < 1) return 'None';
-  const lastStatus = status.sort((a, b) => b.date.localeCompare(a.date))[0];
-  const date = new Date(lastStatus.date);
-  return `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`;
-}
-
-function renderLastStatus(status: Project['status']) {
-  if (!status || status.length < 1) return 'None';
-  const { kind } = status.sort((a, b) => b.date.localeCompare(a.date))[0];
-  return kind;
-}
-
-function renderOwners(owners: Array<null | User>) {
-  const reducer = (acc: React.ReactNode[], curr: null | User) =>
-    curr ? [...acc, <Tag key={curr._id}>{curr.name}</Tag>] : acc;
-  return owners.reduce(reducer, []);
-}
+import {
+  renderCreationDate,
+  renderLastDate,
+  renderLastStatus,
+  renderOwners,
+  renderTags,
+} from '../../utils/tableRenders';
 
 function stringSorter(key: 'title') {
   return (a: Project, b: Project) => a[key].localeCompare(b[key]);
