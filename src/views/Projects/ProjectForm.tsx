@@ -55,6 +55,7 @@ const ProjectForm = ({ closeModal }: Props) => {
       owner: userId,
       status: { kind: data.status, date: new Date().toString(), user: userId },
     };
+    const user = { _id: userId, name: 'user' };
     createProject({
       variables: { project },
       optimisticResponse: {
@@ -64,7 +65,7 @@ const ProjectForm = ({ closeModal }: Props) => {
           _id: 'optimistic',
           title: project.title,
           description: project.description,
-          status: [{ ...project.status, user: { _id: userId, name: 'user' } }],
+          status: [{ ...project.status, user }],
         },
       },
     });

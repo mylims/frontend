@@ -2,41 +2,31 @@ import React, { useState } from 'react';
 
 import ExperimentForm from './ExperimentForm';
 
-import Tag from '../../components/Tag';
 import Error from '../../components/Error';
 import Table, { TableColumn } from '../../components/Table';
 
 import {
-  User,
   Experiment,
   useExperimentsQuery,
   ExperimentFieldsFragment,
 } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
-
-function renderTags(tags: string[]) {
-  if (!tags) return null;
-  return tags.map((tag) => <Tag key={tag}>{tag}</Tag>);
-}
-
-function renderDate(initialDate: string) {
-  const date = new Date(initialDate);
-  return initialDate
-    ? `${date.getDate()} / ${1 + date.getMonth()} / ${date.getFullYear()}`
-    : 'None';
-}
-
-function renderOwners(owners: Array<null | User>) {
-  const reducer = (acc: React.ReactNode[], curr: null | User) =>
-    curr ? [...acc, <Tag key={curr._id}>{curr.name}</Tag>] : acc;
-  return owners.reduce(reducer, []);
-}
+import {
+  renderCreationDate,
+  renderLastDate,
+  renderLastStatus,
+} from '../../utils/tableRenders';
 
 function stringSorter(key: 'codeId' | 'title') {
   return (a: Experiment, b: Experiment) => a[key].localeCompare(b[key]);
 }
 
 const columns: TableColumn<ExperimentFieldsFragment>[] = [
+  {
+    key: 'codeId',
+    title: 'Code',
+    sorter: stringSorter('title'),
+  },
   {
     key: 'title',
     title: 'Title',
@@ -48,8 +38,18 @@ const columns: TableColumn<ExperimentFieldsFragment>[] = [
   },
   {
     key: 'status',
+    title: 'Creation date',
+    render: renderCreationDate,
+  },
+  {
+    key: 'status',
+    title: 'Last modification date',
+    render: renderLastDate,
+  },
+  {
+    key: 'status',
     title: 'Status',
-    render: (value: Experiment['status']) => (value ? value[0].kind : null),
+    render: renderLastStatus,
   },
 ];
 
