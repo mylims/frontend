@@ -560,10 +560,17 @@ export type CreateExperimentMutation = (
 
 export type ProjectFieldsFragment = (
   { __typename?: 'Project' }
-  & Pick<Project, '_id' | 'title' | 'description'>
-  & { status?: Maybe<Array<(
+  & Pick<Project, '_id' | 'title' | 'description' | 'tags'>
+  & { owners?: Maybe<Array<(
+    { __typename?: 'User' }
+    & Pick<User, '_id' | 'name'>
+  )>>, status?: Maybe<Array<(
     { __typename?: 'Status' }
-    & Pick<Status, 'kind'>
+    & Pick<Status, 'kind' | 'date'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'name'>
+    )> }
   )>> }
 );
 
@@ -709,8 +716,18 @@ export const ProjectFieldsFragmentDoc = gql`
   _id
   title
   description
+  owners {
+    _id
+    name
+  }
+  tags
   status {
     kind
+    date
+    user {
+      _id
+      name
+    }
   }
 }
     `;
