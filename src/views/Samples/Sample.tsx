@@ -11,6 +11,11 @@ import {
   useSamplesQuery,
 } from '../../utils/generated';
 import { getNumberUrlParam } from '../../utils/filters';
+import {
+  renderCreationDate,
+  renderLastDate,
+  renderLastStatus,
+} from '../../utils/tableRenders';
 
 function stringSorter(key: 'codeId' | 'title') {
   return (a: Sample, b: Sample) => a[key].localeCompare(b[key]);
@@ -33,8 +38,18 @@ const columns: TableColumn<SampleFieldsFragment>[] = [
   },
   {
     key: 'status',
+    title: 'Creation date',
+    render: renderCreationDate,
+  },
+  {
+    key: 'status',
+    title: 'Last modification date',
+    render: renderLastDate,
+  },
+  {
+    key: 'status',
     title: 'Status',
-    render: (value: Sample['status']) => (value ? value[0].kind : null),
+    render: renderLastStatus,
   },
 ];
 

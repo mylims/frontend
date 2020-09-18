@@ -610,7 +610,11 @@ export type SampleFieldsFragment = (
   & Pick<Sample, '_id' | 'codeId' | 'title' | 'description'>
   & { status?: Maybe<Array<(
     { __typename?: 'Status' }
-    & Pick<Status, 'kind'>
+    & Pick<Status, 'kind' | 'date'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'name'>
+    )> }
   )>> }
 );
 
@@ -739,6 +743,11 @@ export const SampleFieldsFragmentDoc = gql`
   description
   status {
     kind
+    date
+    user {
+      _id
+      name
+    }
   }
 }
     `;
