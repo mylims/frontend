@@ -26,13 +26,13 @@
     "react": "~16.13.1",
     "react-dom": "~16.13.1",
     "react-dropzone": "~11.0.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "tailwindcss": "~1.5.2",
     "typescript": "~3.9.7",
     "yup": "~0.29.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "~1.17.4",
+    "@graphql-codegen/cli": "~1.21.8",
     "@graphql-codegen/typescript": "~1.17.4",
     "@graphql-codegen/typescript-operations": "~1.17.4",
     "@graphql-codegen/typescript-react-apollo": "~1.17.4",
